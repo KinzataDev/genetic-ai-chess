@@ -14,11 +14,11 @@ has 'weight' => (
 
 sub calculate_value {
 	my $self       = shift;
-	my $game_state = shift;
+	my $status_hash = shift;
 
 	# Override and do stuff;
 
-	return $weight;
+	return $self->weight;
 }
 
 

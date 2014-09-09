@@ -6,6 +6,8 @@ use namespace::autoclean;
 use Chess::Player::AI;
 use Chess::Board;
 
+use DDP;
+
 use constant {
 	WHITE_MOVE => 128,
 	BLACK_MOVE => 0,
@@ -16,7 +18,7 @@ has 'player_white' => (
 	isa => 'Chess::Player',
 	lazy => 1,
 	default => sub {
-		return Chess::Player::AI->new();
+		return Chess::Player::AI->new( name => "Player_white");
 	},
 );
 
@@ -25,7 +27,7 @@ has 'player_black' => (
 	isa => 'Chess::Player',
 	lazy => 1,
 	default => sub {
-		return Chess::Player::AI->new();
+		return Chess::Player::AI->new( name => "Player_black");
 	},
 );
 
@@ -42,8 +44,8 @@ sub _init {
 	my $self = shift;
 
 	$self->board( Chess::Board->new() );
-	$self->player_white( Chess::Player::AI->new() );
-	$self->player_black( Chess::Player::AI->new() );
+	$self->player_white( Chess::Player::AI->new( name => "Player_white" ) );
+	$self->player_black( Chess::Player::AI->new( name => "Player_black" ) );
 
 	return;
 }
@@ -58,27 +60,24 @@ sub play_game {
 		$self->play_turn;
 	}
 
-	use DDP; p $self->board->rep->dump_pos();
+	p $self->board->rep->dump_pos();
 }
 
 sub play_turn {
 	my $self = shift;
 
 	my $move;
-	my $state       = $self->board->status;
 	my $player_turn = $self->board->to_move();
 
 	if ( $player_turn == WHITE_MOVE ) {
-		print STDERR "WHITE MOVE\n";
-		$move = $self->player_white->move( { state => $state } );
+		$move = $self->player_white->move( $self->board );
 	}
 	else {
-		print STDERR "BLACK MOVE\n";
-		$move = $self->player_black->move( { state => $state } );
+		$move = $self->player_black->move( $self->board );
 	}
 
 	$self->board->go_move($move);
-	use DDP; p $move;
+	p $move;
 }
 
 1;
