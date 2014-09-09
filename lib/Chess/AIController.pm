@@ -47,6 +47,16 @@ sub _init {
 	$self->player_white( Chess::Player::AI->new( name => "Player_white" ) );
 	$self->player_black( Chess::Player::AI->new( name => "Player_black" ) );
 
+	$self->board->white_status( $self->board->status );
+
+	$self->board->to_move(BLACK_MOVE);
+	$self->board->rep->compute_valid_moves;
+
+	$self->board->black_status( $self->board->status );
+
+	$self->board->to_move(WHITE_MOVE);
+	$self->board->rep->compute_valid_moves;
+
 	return;
 }
 
@@ -66,18 +76,20 @@ sub play_game {
 sub play_turn {
 	my $self = shift;
 
-	my $move;
+	my $move_hash;
 	my $player_turn = $self->board->to_move();
 
 	if ( $player_turn == WHITE_MOVE ) {
-		$move = $self->player_white->move( $self->board );
+		$move_hash = $self->player_white->move( $self->board );
+		$self->board->white_status( $move_hash->{status} );
 	}
 	else {
-		$move = $self->player_black->move( $self->board );
+		$move_hash = $self->player_black->move( $self->board );
+		$self->board->black_status( $move_hash->{status} );
 	}
 
-	$self->board->go_move($move);
-	p $move;
+	$self->board->go_move( $move_hash->{move} );
+	p $move_hash->{move};
 }
 
 1;

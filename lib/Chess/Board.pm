@@ -6,6 +6,8 @@ use namespace::autoclean;
 use Chess::Rep;
 
 use constant {
+	WHITE_MOVE   => 128,
+	BLACK_MOVE   => 0,
 	BLACK_PAWN   => 0x01,    # 1
 	BLACK_KNIGHT => 0x02,    # 2
 	BLACK_KING   => 0x04,    # 4
@@ -42,6 +44,20 @@ has 'piece_map' => (
 	},
 );
 
+has 'white_status' => (
+	is => 'rw',
+	isa => 'Maybe[HashRef]',
+	lazy => 1,
+	default => undef,
+);
+
+has 'black_status' => (
+	is => 'rw',
+	isa => 'Maybe[HashRef]',
+	lazy => 1,
+	default => undef,
+);
+
 has 'rep' => (
 	is      => 'rw',
 	isa     => 'Chess::Rep',
@@ -50,6 +66,13 @@ has 'rep' => (
 		return Chess::Rep->new();
 	},
 );
+
+#has 'temp_rep' => (
+#	is      => 'rw',
+#	isa     => 'Chess::Rep',
+#	lazy    => 1,
+#	default =>
+#);
 
 sub to_move {
 	my $self = shift;
@@ -105,13 +128,14 @@ sub get_op_status {
 	my $self   = shift;
 	my $player = $self->to_move;
 
-	$self->rep->to_move( !$player );
-	$self->rep->compute_valid_moves;
+	my $status;
 
-	my $status = $self->rep->status;
-
-	$self->rep->to_move($player);
-	$self->rep->compute_valid_moves;
+	if( $player == WHITE_MOVE ) {
+		$status = $self->white_status;
+	}
+	else {
+		$status = $self->black_status;
+	}
 
 	return $status;
 }

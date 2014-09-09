@@ -32,24 +32,24 @@ override 'move' => sub {
 	my $move_list = $my_state->{moves};
 
 	my $temp_move;
-	my $move_value;
+	my $move_hash;
 
 	foreach my $move ( @{$move_list} ) {
 		$temp_move = lc Chess::Rep::get_field_id( $move->{from} ) . lc Chess::Rep::get_field_id( $move->{to} );
-		$move_value = $self->calculate_move_value( $board, $temp_move );
-		if( $move_value > $best_move_value ) {
-			$best_move_value = $move_value;
-			$best_move = $temp_move;
-			@best_moves = ($temp_move);
+		$move_hash = $self->calculate_move_value( $board, $temp_move );
+		if ( $move_hash->{value} > $best_move_value ) {
+			$best_move_value = $move_hash->{value};
+			$best_move      = $move_hash;
+			@best_moves     = ($move_hash);
 		}
-		elsif( $move_value == $best_move_value ) {
-			push @best_moves, $temp_move;
+		elsif ( $move_hash->{value} == $best_move_value ) {
+			push @best_moves, $move_hash;
 		}
 	}
 
 	p $best_move_value;
 
-	return @best_moves[ int(rand( scalar @best_moves )) ];;
+	return @best_moves[ int(rand( scalar @best_moves )) ];
 };
 
 sub calculate_move_value {
@@ -59,7 +59,11 @@ sub calculate_move_value {
 
 	my $new_status_hash = $board->get_status_after_move( $move );
 
-	return $self->strand->calculate_move_value( $new_status_hash );
+	return {
+		move   => $move,
+		value  => $self->strand->calculate_move_value($new_status_hash),
+		status => $new_status_hash->{my_status},
+	};
 }
 
 __PACKAGE__->meta->make_immutable;
