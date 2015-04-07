@@ -6,6 +6,8 @@ use namespace::autoclean;
 use Chess::Player::AI;
 use Chess::Board;
 
+use Chess::Utils::Log qw/ $util_log /;
+
 use DDP;
 
 use constant {
@@ -70,7 +72,8 @@ sub play_game {
 		$self->play_turn;
 	}
 
-	p $self->board->rep->dump_pos();
+	my $ref = $self->board->rep->dump_pos();
+	$util_log->dump( ref => $ref, level => 1 );
 }
 
 sub play_turn {

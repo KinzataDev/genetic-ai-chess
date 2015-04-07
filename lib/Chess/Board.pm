@@ -67,13 +67,6 @@ has 'rep' => (
 	},
 );
 
-#has 'temp_rep' => (
-#	is      => 'rw',
-#	isa     => 'Chess::Rep',
-#	lazy    => 1,
-#	default =>
-#);
-
 sub to_move {
 	my $self = shift;
 	return $self->rep->to_move;

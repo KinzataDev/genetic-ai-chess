@@ -1,4 +1,5 @@
-#!/usr/bin/env perl -d:NYTProf
+##!/usr/bin/env perl -d:NYTProf
+#!/usr/bin/env perl
 
 use Test::More;
 

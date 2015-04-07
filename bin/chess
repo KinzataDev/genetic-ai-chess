@@ -1,0 +1,8 @@
+#!/usr/bin/env perl
+
+use FindBin qw($Bin);
+use lib "$Bin/../lib";
+
+use Chess;
+
+Chess->run;
