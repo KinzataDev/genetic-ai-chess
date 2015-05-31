@@ -9,15 +9,16 @@ our @EXPORT = qw/$util_log/;
 use Log::Log4perl;
 use Log::Any::Adapter;
 
+use Chess::Config;
+
 # TEMP
 use Dir::Self;
 
 our $util_log = Chess::Utils::Log::Object->new();
 
-sub init {
-	my $self = shift;
+sub init_logger {
+	my $class = shift;
 
-	print "HIT";
 	# TODO: Common path names
 	Log::Log4perl::init( __DIR__ . "/../../../log4perl.conf" );
 	Log::Any::Adapter->set('Log4perl');
@@ -26,12 +27,11 @@ sub init {
 }
 
 {
-
 	package Chess::Utils::Log::Object;
 
 	use Moose;
 
-	use Log::Any qw/ $log /;
+	use Log::Any qw/$log/;
 	use Term::ANSIColor qw/:constants/;
 	use POSIX;
 	use Data::Dumper;
@@ -45,8 +45,7 @@ sub init {
 
 	sub _build_use_color {
 
-		#TODO: return config value
-		return 1;
+		return Chess::Config->_config->{utils}{log}{use_color} // 1;
 	}
 
 	has 'use_package' => (
@@ -57,8 +56,7 @@ sub init {
 
 	sub _build_use_package {
 
-		#TODO: return config value
-		return 1;
+		return Chess::Config->_config->{utils}{log}{use_package} // 1;
 	}
 
 	has 'use_timestamp' => (
@@ -69,8 +67,7 @@ sub init {
 
 	sub _build_use_timestamp {
 
-		#TODO return config value
-		return 1;
+		return Chess::Config->_config->{utils}{log}{use_timestamp} // 0;
 	}
 
 	has 'verbose_level' => (
@@ -84,19 +81,18 @@ sub init {
 			if ( $value > 0 ) {
 				$log->debug("util log verbose level set to $value");
 			}
-		},
+		}
 	);
 
 	sub _build_verbose_level {
 		my $self = shift;
 
-		my $value = 5;
+		my $value = Chess::Config->_config->{utils}{log}{default_verbosity} // 1;
 
 		if ( $value > 0 ) {
 			$log->debug("util log verbose level set to $value");
 		}
 
-		#TODO return config value
 		return $value;
 	}
 
@@ -109,44 +105,43 @@ sub init {
 	sub _build_output {
 		my $self = shift;
 
-		#TODO return config value
-		return "Log4perl";;
+		return Chess::Config->_config->{utils}{log}{output} // "Log4Perl";
 	}
 
-	has '_magic' => (
-		is => 'ro',
-		isa => 'Object',
-		lazy_build => 1,
-		handles => [
-			qw/
-				trace
-				debug
-				info
-				warnings
-				error
-				fatal
-				log
-				is_trace
-				is_debug
-				is_info
-				is_warn
-				is_error
-				is_fatal
-				logdie
-				logwarn
-				error_warn
-				error_die
-				logcarp
-				logcluck
-				logcroakk
-				logconfess
-			/
-		],
-	);
-
-	sub _build__magic {
-		return $log;
-	}
+#	has '_magic' => (
+#		is => 'ro',
+#		isa => 'Object',
+#		lazy_build => 1,
+#		handles => [
+#			qw/
+#				trace
+#				debug
+#				info
+#				warnings
+#				error
+#				fatal
+#				log
+#				is_trace
+#				is_debug
+#				is_info
+#				is_warn
+#				is_error
+#				is_fatal
+#				logdie
+#				logwarn
+#				error_warn
+#				error_die
+#				logcarp
+#				logcluck
+#				logcroakk
+#				logconfess
+#			/
+#		],
+#	);
+#
+#	sub _build__magic {
+#		return $log;
+#	}
 
 	sub debug_bold  { return BOLD; }
 	sub debug_blink { return BLINK; }
@@ -176,7 +171,7 @@ sub init {
 		my $self = shift;
 		my $level = shift;
 
-		return $self->verbose_level > $level;
+		return $self->verbose_level >= $level;
 	}
 
 	sub timestamp {
