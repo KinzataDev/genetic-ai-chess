@@ -1,4 +1,4 @@
-package Chess::AI::Genetic::Gene::EnemyKingCheck;
+package Chess::AI::Genetic::Gene::EnemyKingMate;
 
 use Moose;
 use namespace::autoclean;
@@ -6,8 +6,17 @@ use namespace::autoclean;
 extends 'Chess::AI::Genetic::Gene';
 
 override '_build_name' => sub {
-	return "Enemy King Check";
+	return "Enemy King Mate";
 };
+
+has '+weight' => (
+	is => 'ro',
+	isa => 'Int',
+	lazy => 1,
+	default => sub {
+		return 1000;
+	},
+);
 
 has '+debug' => (
 	is      => 'rw',
@@ -21,7 +30,7 @@ augment 'calculate_value' => sub {
 	my $game_state = shift;
 
 	#TODO: Is it OK that this returns 0 if the check is false, regardless of weight?
-	my $value = $self->weight * $game_state->{op_status}{check};
+	my $value = $self->weight * $game_state->{op_status}{mate};
 
 	return $value;
 };
@@ -30,4 +39,5 @@ augment 'calculate_value' => sub {
 __PACKAGE__->meta->make_immutable;
 
 1;
+
 

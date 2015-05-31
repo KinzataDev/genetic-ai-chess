@@ -2,12 +2,13 @@ package Chess::Player::AI;
 
 use Moose;
 use namespace::autoclean;
-use DDP;
 
 use Chess::Rep;
 use Chess::Player;
 use Chess::AI::Genetic::Strand;
 extends 'Chess::Player';
+
+use Chess::Utils::Log qw/ $util_log /;
 
 has 'strand' => (
 	is => 'ro',
@@ -47,9 +48,10 @@ override 'move' => sub {
 		}
 	}
 
-	p $best_move_value;
+	my $selected_move = @best_moves[ int(rand( scalar @best_moves )) ];
 
-	return @best_moves[ int(rand( scalar @best_moves )) ];
+	$util_log->level_debug( message => "Picking move: $selected_move->{move}", level => 1, color => $util_log->debug_red, );
+	return $selected_move;
 };
 
 sub calculate_move_value {
@@ -57,11 +59,17 @@ sub calculate_move_value {
 	my $board = shift;
 	my $move  = shift;
 
-	my $new_status_hash = $board->get_status_after_move( $move );
+	$util_log->level_debug( message => "=" x 15, level => 2, color => $util_log->debug_cyan, );
+
+	my $new_status_hash = $board->get_status_after_move($move);
+
+	$util_log->level_debug( message => "Checking move: $move", level => 2, color => $util_log->debug_cyan, );
+
+	my $value = $self->strand->calculate_move_value($new_status_hash);
 
 	return {
 		move   => $move,
-		value  => $self->strand->calculate_move_value($new_status_hash),
+		value  => $value,
 		status => $new_status_hash->{my_status},
 	};
 }

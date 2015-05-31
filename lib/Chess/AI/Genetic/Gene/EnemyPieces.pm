@@ -6,11 +6,22 @@ use DDP;
 
 extends 'Chess::AI::Genetic::Gene';
 
-override 'calculate_value' => sub {
+has '+debug' => (
+	is      => 'rw',
+	isa     => 'Bool',
+	lazy    => 1,
+	default => 1,
+);
+
+override '_build_name' => sub {
+	return "Enemy Pieces Captured";
+};
+
+augment 'calculate_value' => sub {
 	my $self        = shift;
 	my $status_hash = shift;
 
-	my $num_enemy_pieces = @{$status_hash->{op_status}->{pieces}};
+	my $num_enemy_pieces = scalar @{$status_hash->{op_status}->{pieces}};
 
 	return (16 - $num_enemy_pieces) * $self->weight;
 };

@@ -5,6 +5,7 @@ use namespace::autoclean;
 
 use Chess::Player::AI;
 use Chess::Board;
+use Chess::Config;
 
 use Chess::Utils::Log qw/ $util_log /;
 
@@ -42,8 +43,12 @@ has 'board' => (
 	},
 );
 
+Chess::Utils::Log->init_logger();
+
 sub _init {
 	my $self = shift;
+
+	$util_log->level_debug( message => "Setting up new game", color => $util_log->debug_green, );
 
 	$self->board( Chess::Board->new() );
 	$self->player_white( Chess::Player::AI->new( name => "Player_white" ) );
@@ -67,13 +72,16 @@ sub play_game {
 
 	my $turns = 0;
 
-	while( !$self->board->is_check && ($turns < 1000) ) {
+	while( !$self->board->is_mate && ($turns < 1000) ) {
 		$turns++;
 		$self->play_turn;
 	}
 
+	use DDP; p $self->board->status;
+
+	$util_log->level_debug( message => "Game complete!", level => 1, color => $util_log->debug_green, );
 	my $ref = $self->board->rep->dump_pos();
-	$util_log->dump( ref => $ref, level => 1 );
+	$util_log->dump( title => "Final State:", ref => "\n$ref", level => 5, color => $util_log->debug_on_white . $util_log->debug_black );
 }
 
 sub play_turn {
@@ -83,16 +91,17 @@ sub play_turn {
 	my $player_turn = $self->board->to_move();
 
 	if ( $player_turn == WHITE_MOVE ) {
+		$util_log->level_debug( message => "Player WHITE's move", level => 2, color => $util_log->debug_green, );
 		$move_hash = $self->player_white->move( $self->board );
 		$self->board->white_status( $move_hash->{status} );
 	}
 	else {
+		$util_log->level_debug( message => "Player BLACK's move", level => 2, color => $util_log->debug_green, );
 		$move_hash = $self->player_black->move( $self->board );
 		$self->board->black_status( $move_hash->{status} );
 	}
 
 	$self->board->go_move( $move_hash->{move} );
-	p $move_hash->{move};
 }
 
 1;

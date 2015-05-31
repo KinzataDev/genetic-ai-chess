@@ -124,10 +124,10 @@ sub get_op_status {
 	my $status;
 
 	if( $player == WHITE_MOVE ) {
-		$status = $self->white_status;
+		$status = $self->black_status;
 	}
 	else {
-		$status = $self->black_status;
+		$status = $self->white_status;
 	}
 
 	return $status;
@@ -140,8 +140,8 @@ sub get_status_after_move {
 	my $fen = $self->rep->get_fen;
 	$self->go_move($move);
 	my $status_hash = {
-		my_status => $self->status,
-		op_status => $self->get_op_status,
+		op_status => $self->status,
+		my_status => $self->get_op_status,
 	};
 	$self->rep->set_from_fen($fen);
 

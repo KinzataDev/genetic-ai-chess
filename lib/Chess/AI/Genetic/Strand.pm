@@ -5,13 +5,23 @@ use namespace::autoclean;
 use DDP;
 
 use Chess::AI::Genetic::Gene::EnemyPieces;
+use Chess::AI::Genetic::Gene::EnemyKingCheck;
+use Chess::AI::Genetic::Gene::EnemyKingMate;
+use Chess::AI::Genetic::Gene::EnemyKingCaptured;
+use Chess::AI::Genetic::Gene::PlayerPiecesThreatened;
 
 has 'genes' => (
 	is => 'ro',
 	isa => 'ArrayRef[Chess::AI::Genetic::Gene]',
 	lazy => 1,
 	default => sub {
-		return [ Chess::AI::Genetic::Gene::EnemyPieces->new() ];
+		return [
+			Chess::AI::Genetic::Gene::EnemyPieces->new(),
+			Chess::AI::Genetic::Gene::EnemyKingCheck->new(),
+			Chess::AI::Genetic::Gene::EnemyKingMate->new(),
+			Chess::AI::Genetic::Gene::EnemyKingCaptured->new(),
+			Chess::AI::Genetic::Gene::PlayerPiecesThreatened->new(),
+		];
 	},
 );
 
