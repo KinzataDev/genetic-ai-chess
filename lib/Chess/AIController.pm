@@ -77,11 +77,9 @@ sub play_game {
 		$self->play_turn;
 	}
 
-	use DDP; p $self->board->status;
-
 	$util_log->level_debug( message => "Game complete!", level => 1, color => $util_log->debug_green, );
 	my $ref = $self->board->rep->dump_pos();
-	$util_log->dump( title => "Final State:", ref => "\n$ref", level => 5, color => $util_log->debug_on_white . $util_log->debug_black );
+	$util_log->dump( title => "Final State:", ref => "\n$ref", level => 1, color => $util_log->debug_on_white . $util_log->debug_black );
 }
 
 sub play_turn {
@@ -101,7 +99,7 @@ sub play_turn {
 		$self->board->black_status( $move_hash->{status} );
 	}
 
-	$self->board->go_move( $move_hash->{move} );
+	my $ret_hash = $self->board->go_move( $move_hash->{move} );
 }
 
 1;

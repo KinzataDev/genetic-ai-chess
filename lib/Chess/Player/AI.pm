@@ -23,8 +23,9 @@ override 'move' => sub {
 	my $self = shift;
 	my $board = shift;
 
+	$util_log->level_debug( message => "Deciding on move...", level => 1, color => $util_log->debug_white, );
+
 	my $my_state = $board->status;
-	my $op_state = $board->get_op_status;
 
 	my $best_move;
 	my @best_moves = ();
@@ -36,8 +37,12 @@ override 'move' => sub {
 	my $move_hash;
 
 	foreach my $move ( @{$move_list} ) {
+
 		$temp_move = lc Chess::Rep::get_field_id( $move->{from} ) . lc Chess::Rep::get_field_id( $move->{to} );
-		$move_hash = $self->calculate_move_value( $board, $temp_move );
+		if ( defined $move->{promote} ) {
+			$temp_move .= $move->{promote};
+		}
+		$move_hash = $self->calculate_move_value( $board, $temp_move, $move->{from}, $move->{to} );
 		if ( $move_hash->{value} > $best_move_value ) {
 			$best_move_value = $move_hash->{value};
 			$best_move      = $move_hash;

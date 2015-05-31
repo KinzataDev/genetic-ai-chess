@@ -3,6 +3,8 @@ package Chess::Board;
 use Moose;
 use namespace::autoclean;
 
+use Chess::Utils::Log qw/ $util_log /;
+
 use Chess::Rep;
 
 use constant {
@@ -76,7 +78,7 @@ sub go_move {
 	my $self = shift;
 	my $move = shift;
 
-	$self->rep->go_move($move);
+	return $self->rep->go_move($move);
 }
 
 sub is_check {
@@ -117,18 +119,61 @@ sub status {
 	return $self->rep->status;
 }
 
+around 'status' => sub {
+	my $orig = shift;
+	my $self = shift;
+
+	my $status = $self->$orig;
+
+	my @moves_to_push = ();
+
+	foreach my $move ( @{ $status->{moves} } ) {
+		# Only bother checking pawns
+		next unless ($move->{piece} & 0x01) == 0x01;
+
+		# If the move is into the first or last row...
+		next unless (($move->{to} & 0x70) == 0x70 || ($move->{to} < 0x10 ));
+
+		# Then add to the move list, the 4 promotion moves
+		push @moves_to_push, {
+			%{$move},
+			promote => '=Q',
+		};
+		push @moves_to_push, {
+			%{$move},
+			promote => '=R',
+		};
+		push @moves_to_push, {
+			%{$move},
+			promote => '=B',
+		};
+		push @moves_to_push, {
+			%{$move},
+			promote => '=N',
+		};
+
+	}
+
+	if( scalar @moves_to_push ) {
+		$util_log->level_debug( message => "Promotion moves added!", level => 2, color => $util_log->debug_red, );
+		push @{$status->{moves}}, @moves_to_push;
+	}
+
+	return $status;
+};
+
 sub get_op_status {
 	my $self   = shift;
 	my $player = $self->to_move;
 
 	my $status;
 
-	if( $player == WHITE_MOVE ) {
-		$status = $self->black_status;
-	}
-	else {
-		$status = $self->white_status;
-	}
+	$self->rep->{to_move} ^= 0x80;
+	$self->rep->compute_valid_moves;
+	$status = $self->status;
+	$self->rep->{to_move} ^= 0x80;
+
+	$self->rep->compute_valid_moves;
 
 	return $status;
 }
@@ -137,13 +182,22 @@ sub get_status_after_move {
 	my $self = shift;
 	my $move = shift;
 
+	$util_log->level_debug( message => "Before test move - To Move: " . $self->to_move, level => 10, color => $util_log->debug_blue, );
+
 	my $fen = $self->rep->get_fen;
+
 	$self->go_move($move);
+
+	$util_log->level_debug( message => "After test move - To Move: " . $self->to_move, level => 10, color => $util_log->debug_blue, );
+
 	my $status_hash = {
 		op_status => $self->status,
 		my_status => $self->get_op_status,
 	};
+
 	$self->rep->set_from_fen($fen);
+
+	$util_log->level_debug( message => "After fen reset - To Move: " . $self->to_move, level => 10, color => $util_log->debug_blue, );
 
 	return $status_hash;
 }
