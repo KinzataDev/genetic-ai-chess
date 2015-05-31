@@ -1,4 +1,4 @@
-package Chess::AI::Genetic::Gene::PlayerPiecesThreatened;
+package Chess::AI::Genetic::Gene::EnemyPiecesThreatened;
 
 use Moose;
 use namespace::autoclean;
@@ -8,7 +8,7 @@ use Chess::Rep;
 extends 'Chess::AI::Genetic::Gene';
 
 override '_build_name' => sub {
-	return "Player Pieces Threatened";
+	return "Enemy Pieces Threatened";
 };
 
 has '+weight' => (
@@ -16,7 +16,7 @@ has '+weight' => (
 	isa => 'Int',
 	lazy => 1,
 	default => sub {
-		return -2;
+		return 1;
 	},
 );
 
@@ -33,8 +33,8 @@ augment 'calculate_value' => sub {
 
 	my $count = 0;
 
-	foreach my $piece ( @{$game_state->{my_status}{pieces}} ) {
-		my $is_attacked = exists $game_state->{op_status}{type_moves}{ $piece->{from} };
+	foreach my $piece ( @{$game_state->{op_status}{pieces}} ) {
+		my $is_attacked = exists $game_state->{my_status}{type_moves}{ $piece->{from} };
 		$count++ if $is_attacked;
 	}
 
@@ -47,6 +47,7 @@ augment 'calculate_value' => sub {
 __PACKAGE__->meta->make_immutable;
 
 1;
+
 
 
 
