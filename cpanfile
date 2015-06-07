@@ -1,0 +1,9 @@
+requires 'App::Cmd::Setup';
+requires 'Chess::Rep';
+requires 'DDP';
+requires 'Log::Log4perl';
+requires 'Log::Any::Adapter';
+requires 'Dir::Self';
+requires 'Config::General';
+requires 'Devel::StackTrace';
+requires 'Log::Any::Adapter::Log4perl';
