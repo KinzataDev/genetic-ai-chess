@@ -124,6 +124,8 @@ around 'status' => sub {
 	my $self = shift;
 
 	my $status = $self->$orig;
+	my $player = $self->to_move;
+	$status->{to_move} = $player;
 
 	my @moves_to_push = ();
 

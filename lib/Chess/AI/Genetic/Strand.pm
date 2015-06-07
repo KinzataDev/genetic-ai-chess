@@ -10,6 +10,8 @@ use Chess::AI::Genetic::Gene::EnemyKingMate;
 use Chess::AI::Genetic::Gene::EnemyKingCaptured;
 use Chess::AI::Genetic::Gene::PlayerPiecesThreatened;
 use Chess::AI::Genetic::Gene::EnemyPiecesThreatened;
+use Chess::AI::Genetic::Gene::EnemyQueens;
+use Chess::AI::Genetic::Gene::PlayerQueens;
 
 has 'genes' => (
 	is => 'ro',
@@ -23,6 +25,8 @@ has 'genes' => (
 			Chess::AI::Genetic::Gene::EnemyKingCaptured->new(),
 			Chess::AI::Genetic::Gene::PlayerPiecesThreatened->new(),
 			Chess::AI::Genetic::Gene::EnemyPiecesThreatened->new(),
+			Chess::AI::Genetic::Gene::EnemyQueens->new(),
+			Chess::AI::Genetic::Gene::PlayerQueens->new(),
 		];
 	},
 );

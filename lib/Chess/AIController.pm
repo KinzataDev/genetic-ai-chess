@@ -74,6 +74,7 @@ sub play_game {
 
 	while( !$self->board->is_mate && ($turns < 1000) ) {
 		$turns++;
+		$util_log->level_debug( message => "Turn: $turns", level => 2, color => $util_log->debug_magenta, );
 		$self->play_turn;
 	}
 
