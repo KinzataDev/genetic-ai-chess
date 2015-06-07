@@ -4,6 +4,8 @@ use Moose;
 use namespace::autoclean;
 use DDP;
 
+use Chess::Config;
+
 use Chess::AI::Genetic::Gene::EnemyPieces;
 use Chess::AI::Genetic::Gene::EnemyKingCheck;
 use Chess::AI::Genetic::Gene::EnemyKingMate;
@@ -18,16 +20,13 @@ has 'genes' => (
 	isa => 'ArrayRef[Chess::AI::Genetic::Gene]',
 	lazy => 1,
 	default => sub {
-		return [
-			Chess::AI::Genetic::Gene::EnemyPieces->new(),
-			Chess::AI::Genetic::Gene::EnemyKingCheck->new(),
-			Chess::AI::Genetic::Gene::EnemyKingMate->new(),
-			Chess::AI::Genetic::Gene::EnemyKingCaptured->new(),
-			Chess::AI::Genetic::Gene::PlayerPiecesThreatened->new(),
-			Chess::AI::Genetic::Gene::EnemyPiecesThreatened->new(),
-			Chess::AI::Genetic::Gene::EnemyQueens->new(),
-			Chess::AI::Genetic::Gene::PlayerQueens->new(),
-		];
+		my $self = shift;
+
+		my $gene_hash = Chess::Config->_config->{genes};
+
+		my $genes = $self->_load_genes( $gene_hash );
+
+		return $genes;
 	},
 );
 
@@ -42,6 +41,30 @@ sub calculate_move_value {
 	}
 
 	return $total;
+}
+
+sub _load_genes {
+	my $self = shift;
+	my $genes = shift;
+
+	my @imported_genes;
+
+	foreach my $gene ( keys %{$genes} ) {
+		my $mod = $gene;
+
+		next unless $genes->{$gene}{enabled};
+		eval "require ($mod)";
+
+		my $imported_gene = $mod->new(
+				weight => $genes->{$gene}{weight},
+				debug => $genes->{$gene}{debug},
+		);
+
+		use DDP; p $imported_gene;
+		push @imported_genes, $imported_gene;
+	}
+
+	return \@imported_genes;
 }
 
 
