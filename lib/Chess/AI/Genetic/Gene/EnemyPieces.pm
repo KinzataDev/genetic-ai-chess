@@ -13,10 +13,6 @@ has '+debug' => (
 	default => 1,
 );
 
-override '_build_name' => sub {
-	return "Enemy Pieces Captured";
-};
-
 augment 'calculate_value' => sub {
 	my $self        = shift;
 	my $status_hash = shift;

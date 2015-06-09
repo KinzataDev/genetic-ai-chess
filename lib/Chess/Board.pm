@@ -6,6 +6,7 @@ use namespace::autoclean;
 use Chess::Utils::Log qw/ $util_log /;
 
 use Chess::Rep;
+use Clone qw/clone/;
 
 use constant {
 	WHITE_MOVE   => 128,
@@ -195,6 +196,7 @@ sub get_status_after_move {
 	my $status_hash = {
 		op_status => $self->status,
 		my_status => $self->get_op_status,
+		rep =>  clone ($self->rep),
 	};
 
 	$self->rep->set_from_fen($fen);

@@ -5,10 +5,6 @@ use namespace::autoclean;
 
 extends 'Chess::AI::Genetic::Gene';
 
-override '_build_name' => sub {
-	return "Enemy King Captured";
-};
-
 has '+weight' => (
 	is => 'ro',
 	isa => 'Int',

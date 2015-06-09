@@ -16,6 +16,15 @@ use constant {
 	BLACK_MOVE => 0,
 };
 
+has 'config' => (
+	is => 'rw',
+	isa => 'HashRef',
+	lazy => 1,
+	default => sub {
+		return Chess::Config->_config;
+	},
+);
+
 has 'player_white' => (
 	is => 'rw',
 	isa => 'Chess::Player',
@@ -72,9 +81,9 @@ sub play_game {
 
 	my $turns = 0;
 
-	while( !$self->board->is_mate && ($turns < 1000) ) {
+	while( !$self->board->is_mate && ($turns < $self->config->{max_moves}) ) {
 		$turns++;
-		$util_log->level_debug( message => "Turn: $turns", level => 2, color => $util_log->debug_magenta, );
+		$util_log->level_debug( message => "Turn: $turns", level => 1, color => $util_log->debug_magenta, );
 		$self->play_turn;
 	}
 
@@ -101,6 +110,9 @@ sub play_turn {
 	}
 
 	my $ret_hash = $self->board->go_move( $move_hash->{move} );
+
+	my $ref = $self->board->rep->dump_pos();
+	$util_log->dump( title => "Final State:", ref => "\n$ref", level => 5, color => $util_log->debug_on_white . $util_log->debug_black );
 }
 
 1;

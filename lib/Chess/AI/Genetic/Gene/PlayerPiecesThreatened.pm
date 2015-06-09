@@ -7,10 +7,6 @@ use Chess::Rep;
 
 extends 'Chess::AI::Genetic::Gene';
 
-override '_build_name' => sub {
-	return "Player Pieces Threatened";
-};
-
 has '+weight' => (
 	is => 'ro',
 	isa => 'Int',

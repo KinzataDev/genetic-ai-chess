@@ -42,7 +42,7 @@ override 'move' => sub {
 		if ( defined $move->{promote} ) {
 			$temp_move .= $move->{promote};
 		}
-		$move_hash = $self->calculate_move_value( $board, $temp_move, $move->{from}, $move->{to} );
+		$move_hash = $self->calculate_move_value( $board, $temp_move );
 		if ( $move_hash->{value} > $best_move_value ) {
 			$best_move_value = $move_hash->{value};
 			$best_move      = $move_hash;

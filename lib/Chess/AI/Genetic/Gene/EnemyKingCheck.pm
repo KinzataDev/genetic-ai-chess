@@ -5,10 +5,6 @@ use namespace::autoclean;
 
 extends 'Chess::AI::Genetic::Gene';
 
-override '_build_name' => sub {
-	return "Enemy King Check";
-};
-
 has '+debug' => (
 	is      => 'rw',
 	isa     => 'Bool',

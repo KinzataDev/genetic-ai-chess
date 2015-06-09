@@ -5,15 +5,7 @@ use namespace::autoclean;
 use DDP;
 
 use Chess::Config;
-
-use Chess::AI::Genetic::Gene::EnemyPieces;
-use Chess::AI::Genetic::Gene::EnemyKingCheck;
-use Chess::AI::Genetic::Gene::EnemyKingMate;
-use Chess::AI::Genetic::Gene::EnemyKingCaptured;
-use Chess::AI::Genetic::Gene::PlayerPiecesThreatened;
-use Chess::AI::Genetic::Gene::EnemyPiecesThreatened;
-use Chess::AI::Genetic::Gene::EnemyQueens;
-use Chess::AI::Genetic::Gene::PlayerQueens;
+use Module::Load;
 
 has 'genes' => (
 	is => 'ro',
@@ -53,14 +45,14 @@ sub _load_genes {
 		my $mod = $gene;
 
 		next unless $genes->{$gene}{enabled};
-		eval "require ($mod)";
+		autoload $mod;
 
 		my $imported_gene = $mod->new(
-				weight => $genes->{$gene}{weight},
-				debug => $genes->{$gene}{debug},
+			weight => $genes->{$gene}{weight},
+			debug => $genes->{$gene}{debug},
+			name => $genes->{$gene}{name},
 		);
 
-		use DDP; p $imported_gene;
 		push @imported_genes, $imported_gene;
 	}
 

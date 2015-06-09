@@ -6,15 +6,11 @@ use namespace::autoclean;
 use Chess::Utils::Log qw/ $util_log /;
 
 has 'name' => (
-	is => 'ro',
+	is => 'rw',
 	isa => 'Str',
-	lazy_build => 1,
+	lazy => 1,
+	default => "Not Named",
 );
-
-sub _build_name {
-	my $package = shift;
-	die "$package requires override of '_build_name'";
-}
 
 has 'debug' => (
 	is      => 'rw',
