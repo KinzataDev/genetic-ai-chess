@@ -1,4 +1,4 @@
-package Chess::AIController;
+package Chess::GameController;
 
 use Moose;
 use namespace::autoclean;

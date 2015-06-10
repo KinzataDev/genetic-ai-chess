@@ -2,7 +2,7 @@ package Chess::Command::game;
 
 use Chess -command;
 
-use Chess::AIController;
+use Chess::GameController;
 
 sub description {
 	return "Run a test game";
@@ -11,7 +11,7 @@ sub description {
 sub execute {
 	my $self = shift;
 
-	my $controller = Chess::AIController->new();
+	my $controller = Chess::GameController->new();
 
 	$controller->_init();
 
