@@ -35,6 +35,33 @@ sub calculate_move_value {
 	return $total;
 }
 
+=head2 mutate
+
+index : Int : Optional
+
+Selects a gene and attempts to apply a mutation to it.  If the selected gene cannot be mutated
+the method will attempt to select on randomly that can until it reaches the maximum number of checks
+
+=cut
+
+sub mutate {
+	my $self = shift;
+	my $args = @_;
+
+	my $index = $args->{index} // int ( rand ( scalar $self->genes ) );
+
+	my $gene_to_mutate = $self->genes->[$index];
+	my $attempts = 0;
+
+	while ( !$gene_to_mutate->can_mutate && $attempts < Chess::Config->_config->{mutation}{max_checks} ) {
+		$gene_to_mutate = $self->genes->[ int ( rand ( scalar $self->genes ) ) ];
+		$attempts++;
+	}
+
+	$gene_to_mutate->mutate();
+	return $gene_to_mutate;
+}
+
 sub _load_genes {
 	my $self = shift;
 	my $genes = shift;
