@@ -12,6 +12,27 @@ has '+debug' => (
 	default => 1,
 );
 
+has 'can_mutate' => (
+	is      => 'rw',
+	isa     => 'Bool',
+	lazy    => 1,
+	default => 1,
+);
+
+has 'max_range' => (
+	is      => 'rw',
+	isa     => 'Num',
+	lazy    => 1,
+	default => 1001,
+);
+
+has 'min_weight' => (
+	is      => 'rw',
+	isa     => 'Num',
+	lazy    => 1,
+	default => 1,
+);
+
 augment 'calculate_value' => sub {
 	my $self       = shift;
 	my $game_state = shift;
@@ -22,6 +43,13 @@ augment 'calculate_value' => sub {
 	return $value;
 };
 
+override 'mutate' => sub {
+	my $self = shift;
+
+	my $mutate_value = rand( $self->max_range ) + $self->min_weight;
+
+	return $mutate_value;
+};
 
 __PACKAGE__->meta->make_immutable;
 

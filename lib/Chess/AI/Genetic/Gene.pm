@@ -28,6 +28,34 @@ has 'weight' => (
 	},
 );
 
+=head2
+
+Defines whether this gene can mutate.  Set this to false for genes that shouldn't get tweaked in
+unexpected ways.
+
+=cut
+
+has 'can_mutate' => (
+	is      => 'rw',
+	isa     => 'Bool',
+	lazy    => 1,
+	default => 1,
+);
+
+has 'max_range' => (
+	is      => 'rw',
+	isa     => 'Num',
+	lazy    => 1,
+	default => 20000,
+);
+
+has 'min_weight' => (
+	is      => 'rw',
+	isa     => 'Num',
+	lazy    => 1,
+	default => -10000,
+);
+
 sub calculate_value {
 	my $self        = shift;
 	my $status_hash = shift;
@@ -42,6 +70,18 @@ sub calculate_value {
 	) if $self->debug;
 
 	return $augmented_value;
+}
+
+=head2
+
+Provides the ability for the gene to specify what should happen if it is selected for mutation.
+
+=cut
+
+sub mutate {
+	my $self = shift;
+
+	return $self->weight;
 }
 
 

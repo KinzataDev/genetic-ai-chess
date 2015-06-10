@@ -21,6 +21,14 @@ has '+debug' => (
 	default => 1,
 );
 
+
+has 'can_mutate' => (
+	is      => 'rw',
+	isa     => 'Bool',
+	lazy    => 1,
+	default => 0,
+);
+
 augment 'calculate_value' => sub {
 	my $self       = shift;
 	my $game_state = shift;
