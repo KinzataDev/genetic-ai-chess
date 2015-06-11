@@ -1,0 +1,47 @@
+FLOW:
+
+Start up service to request games
+GameManager
+	Service queries DB for most recent generation, pulls in 2 strands that haven't played
+	Sends strands off via MQ to be played -> GameController (via MQ backend)
+
+	Polls every once in a while for all strands to have completed games.
+	Once done, retrieves them based on the selection rules and sends them to be processed.
+	New children are inserted into DB under a new generation.
+
+GameControllerProcess
+	Builds 2 AI players via the strands.
+	Creates actual GameController object and kicks off the game
+	When done, records winner in the DB if there was one, along with any relevant info
+
+Tables:
+	Generation:
+		generation_id - serial
+		generation - int
+		attempt - int - seriously come up with a better name than this, represents the generation of the... generations
+
+	Strand:
+		strand_id - uuid
+		generation_id - int
+		json_gene_description - json
+		has_played - bool
+
+	Match:
+		match_id - uuid
+		json_move_log - json - Better way to do this?
+		is_complete - bool
+		fen - str
+		number_of_moves - int
+
+	Player:
+		player_id - uuid
+		name - string
+		strand_id - uuid - Only relevant for AI players
+		wins - int
+
+	MatchPlayer
+		player_id - uuid
+		match_id - uuid
+		is_white - bool
+
+
