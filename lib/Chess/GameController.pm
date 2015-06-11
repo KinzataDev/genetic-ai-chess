@@ -81,15 +81,32 @@ sub play_game {
 
 	my $turns = 0;
 
+	my $to_move = 0;
+
 	while( !$self->board->is_mate && ($turns < $self->config->{max_moves}) ) {
 		$turns++;
 		$util_log->level_debug( message => "Turn: $turns", level => 1, color => $util_log->debug_magenta, );
+		$to_move = $self->board->to_move();
 		$self->play_turn;
 	}
+
+	# $to_move is the winner
 
 	$util_log->level_debug( message => "Game complete!", level => 1, color => $util_log->debug_green, );
 	my $ref = $self->board->rep->dump_pos();
 	$util_log->dump( title => "Final State:", ref => "\n$ref", level => 1, color => $util_log->debug_on_white . $util_log->debug_black );
+
+	# TODO: return winner, and number of turns
+	if( $turn == $self->config->{max_moves} ) {
+		return { winner => undef, turns => $turns };
+	}
+
+	if ( $to_move == WHITE_MOVE ) {
+		return { winner => $self->player_white, turns => $turns };
+	}
+	else {
+		return { winner => $self->player_black, turns => $turns };
+	}
 }
 
 sub play_turn {
