@@ -61,9 +61,9 @@ the method will attempt to select on randomly that can until it reaches the maxi
 
 sub mutate {
 	my $self = shift;
-	my $args = @_;
+	my %args = @_;
 
-	my $index = $args->{index} // int ( rand ( scalar $self->genes ) );
+	my $index = $args{index} // int ( rand ( scalar @{$self->genes} ) );
 
 	my $gene_to_mutate = $self->genes->[$index];
 	my $attempts = 0;
@@ -73,7 +73,7 @@ sub mutate {
 		$attempts++;
 	}
 
-	$gene_to_mutate->mutate();
+	$gene_to_mutate->weight( $gene_to_mutate->mutate() );
 	return $gene_to_mutate;
 }
 

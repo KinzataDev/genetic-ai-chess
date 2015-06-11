@@ -81,13 +81,14 @@ sub calculate_value {
 =head2
 
 Provides the ability for the gene to specify what should happen if it is selected for mutation.
+Augment this method and return the new value.
 
 =cut
 
 sub mutate {
 	my $self = shift;
 
-	return $self->weight;
+	return rand ( $self->max_range ) + $self->min_weight;
 }
 
 sub to_hash {

@@ -1,4 +1,4 @@
-package StrandProcessor;
+package Chess::AI::Genetic::StrandProcessor;
 
 use Moose;
 use namespace::autoclean;
@@ -32,7 +32,22 @@ for insertion into the next generation.
 sub process {
 	my $self = shift;
 
-	return 1;
+	my $num_parents = $self->genetic_operator->strand_count;
+	my @new_generation;
+
+	#TODO: Piece by piece send in the given number of parents to be processed into children
+	while ( scalar @{$self->strand_set} ) {
+		my @strands;
+		for( 1..$num_parents ) {
+			push @strands, shift $self->strand_set;
+		}
+
+		my $children = $self->genetic_operator->process( strands => \@strands );
+
+		push @new_generation, @{$children};
+	}
+
+	return \@new_generation;
 }
 
 __PACKAGE__->meta->make_immutable;
