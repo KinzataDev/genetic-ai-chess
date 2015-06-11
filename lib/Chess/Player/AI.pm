@@ -6,6 +6,7 @@ use namespace::autoclean;
 use Chess::Rep;
 use Chess::Player;
 use Chess::AI::Genetic::Strand;
+use Chess::AI::Genetic::Strand;
 extends 'Chess::Player';
 
 use Chess::Utils::Log qw/ $util_log /;

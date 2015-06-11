@@ -5,6 +5,12 @@ use namespace::autoclean;
 
 use Chess::Utils::Log qw/ $util_log /;
 
+has 'id' => (
+	is => 'rw',
+	isa => 'Int',
+	required => 1,
+);
+
 has 'name' => (
 	is => 'rw',
 	isa => 'Str',
@@ -84,6 +90,19 @@ sub mutate {
 	return $self->weight;
 }
 
+sub to_hash {
+	my $self = shift;
+
+	return {
+		id => $self->id,
+		name => $self->name,
+		weight => $self->weight,
+		can_mutate => $self->can_mutate,
+		max_range => $self->max_range,
+		min_weight => $self->min_weight,
+		module_name => __PACKAGE__,
+	};
+}
 
 __PACKAGE__->meta->make_immutable;
 

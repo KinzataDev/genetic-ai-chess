@@ -16,9 +16,24 @@ has 'genes' => (
 
 		my $gene_hash = Chess::Config->_config->{genes};
 
-		my $genes = $self->_load_genes( $gene_hash );
+		my $genes;
+		if ( defined $self->gene_definition ) {
+			$genes = $self->_build_strand_from_definition ( $self->gene_definition );
+		}
+		else {
+			$genes = $self->_load_default_genes( $gene_hash );
+		}
 
 		return $genes;
+	},
+);
+
+has 'gene_definition' => (
+	is => 'ro',
+	isa => 'HashRef|Undef',
+	lazy => 1,
+	default => sub {
+		return undef;
 	},
 );
 
@@ -62,7 +77,42 @@ sub mutate {
 	return $gene_to_mutate;
 }
 
-sub _load_genes {
+sub get_gene_hash {
+	my $self = shift;
+
+	my $hash = {};
+
+	foreach my $gene ( $self->genes ) {
+		$hash->{$gene->id} = $gene->to_hash();
+	}
+
+	return $hash;
+}
+
+sub _build_strand_from_definition {
+	my $self = shift;
+	my $hash = $self->gene_definition;
+
+	my @genes;
+
+	foreach my $key ( keys %{$hash} ) {
+		my $gene_hash = $hash->{$key};
+		autoload $gene_hash->{module_name};
+
+		push @genes, $gene_hash->{module_name}->new(
+			weight  => $gene_hash->{weight},
+			name    => $gene_hash->{name},
+			id      => $gene_hash->{id},
+			debug   => $gene_hash->{debug},
+			max_range => $gene_hash->{max_range},
+			min_weight => $gene_hash->{min_weight},
+		);
+	}
+
+	return \@genes;
+}
+
+sub _load_default_genes {
 	my $self = shift;
 	my $genes = shift;
 
@@ -78,6 +128,7 @@ sub _load_genes {
 			weight => $genes->{$gene}{weight},
 			debug => $genes->{$gene}{debug},
 			name => $genes->{$gene}{name},
+			id   => $genes->{$gene}{id},
 		);
 
 		push @imported_genes, $imported_gene;
