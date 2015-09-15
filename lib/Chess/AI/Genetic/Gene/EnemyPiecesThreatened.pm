@@ -42,7 +42,7 @@ augment 'calculate_value' => sub {
 override 'mutate' => sub {
 	my $self = shift;
 
-	return rand( $self->max_range ) - $self->min_weight;
+	return rand( $self->max_range ) + $self->min_weight;
 };
 
 __PACKAGE__->meta->make_immutable;
