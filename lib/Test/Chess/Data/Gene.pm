@@ -8,7 +8,7 @@ sub build_gene_definition {
 			weight => 100,
 			debug => 1,
 			module_name => 'Chess::AI::Genetic::Gene',
-			max_range => 100,
+			max_range => 200,
 			min_weight => -100,
 		},
 		2 => {
@@ -17,8 +17,8 @@ sub build_gene_definition {
 			weight => 200,
 			debug => 0,
 			module_name => 'Chess::AI::Genetic::Gene',
-			max_range => 200,
-			min_weight => -300,
+			max_range => 400,
+			min_weight => -200,
 		},
 		3 => {
 			id => 3,
@@ -26,7 +26,7 @@ sub build_gene_definition {
 			weight => 300,
 			debug => 1,
 			module_name => 'Chess::AI::Genetic::Gene',
-			max_range => 300,
+			max_range => 600,
 			min_weight => -300,
 		},
 	};

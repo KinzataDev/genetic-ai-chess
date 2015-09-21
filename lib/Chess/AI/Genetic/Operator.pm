@@ -53,6 +53,8 @@ sub _handle_mutation {
 		# Build strand
 		my $strand = Chess::AI::Genetic::Strand->new( gene_definition => $child );
 		$strand->mutate;
+
+#TODO: Need to assign this to something?  The children don't hold the mutation
 	}
 }
 

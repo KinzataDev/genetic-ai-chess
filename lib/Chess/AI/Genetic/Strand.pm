@@ -28,6 +28,12 @@ has 'genes' => (
 	},
 );
 
+=head2 gene_definition
+
+Definition of a gene as stored in the database or loaded for a test
+
+=cut
+
 has 'gene_definition' => (
 	is => 'ro',
 	isa => 'HashRef|Undef',

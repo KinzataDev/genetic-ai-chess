@@ -3,6 +3,8 @@ package Chess::AI::Genetic::Operator::Crossover::Uniform;
 use Moose;
 use namespace::autoclean;
 
+use Clone 'clone';
+
 extends 'Chess::AI::Genetic::Operator';
 
 has 'crossover_percentage' => (
@@ -13,6 +15,12 @@ has 'crossover_percentage' => (
 		return .5;
 	},
 );
+
+=head2 process
+
+Given the crossover_percentage value, determine which parent to take the gene from
+
+=cut
 
 augment 'process' => sub {
 	my $self        = shift;
@@ -29,7 +37,7 @@ augment 'process' => sub {
 		my $take_parent_1 = ( rand > $self->crossover_percentage ) ? 1 : 0;
 		my $child_weight = $take_parent_1 ? $parent_1->{$key}{weight} : $parent_2->{$key}{weight};
 
-		$child_hash->{$key} = $parent_1->{$key};
+		$child_hash->{$key} = clone($parent_1->{$key});
 		$child_hash->{$key}{weight} = $child_weight;
 	}
 

@@ -19,6 +19,11 @@ my $uniform = Chess::AI::Genetic::Operator::Crossover::Uniform->new();
 
 my $children = $uniform->process( strands => [ $hash_1, $hash_2 ] );
 
-# Child 
+# Child
 
-#use DDP; p $children;
+use DDP; p $children;
+
+my $child_strand = Chess::AI::Genetic::Strand->new( gene_definition => $children->[0] );
+$child_strand->genes;
+$child_strand->mutate;
+use DDP; p $child_strand->genes;

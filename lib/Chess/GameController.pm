@@ -97,7 +97,7 @@ sub play_game {
 	$util_log->dump( title => "Final State:", ref => "\n$ref", level => 1, color => $util_log->debug_on_white . $util_log->debug_black );
 
 	# TODO: return winner, and number of turns
-	if( $turn == $self->config->{max_moves} ) {
+	if( $turns == $self->config->{max_moves} ) {
 		return { winner => undef, turns => $turns };
 	}
 
