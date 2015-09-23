@@ -1,0 +1,33 @@
+{
+   "sets" : [
+      {
+         "quantity" : "all",
+         "class" : "MatchPlayer"
+      },
+      {
+         "quantity" : "all",
+         "class" : "Player"
+      },
+      {
+         "class" : "Generation",
+         "quantity" : "all"
+      },
+      {
+         "class" : "Strand",
+         "quantity" : "all"
+      },
+      {
+         "class" : "Match",
+         "quantity" : "all"
+      }
+   ],
+   "belongs_to" : {
+      "fetch" : 0
+   },
+   "has_many" : {
+      "fetch" : 0
+   },
+   "might_have" : {
+      "fetch" : 0
+   }
+}

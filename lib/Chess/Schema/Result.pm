@@ -3,8 +3,6 @@ package Chess::Schema::Result;
 use Moose;
 use namespace::autoclean;
 
-extends DBIx::Class::Result;
-
-__PACKAGE__->meta->make_immutable;
+extends 'DBIx::Class::Core';
 
 1;

@@ -1,0 +1,478 @@
+---
+schema:
+  procedures: {}
+  tables:
+    generation:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - generation_id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+      fields:
+        attempt:
+          data_type: int
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: attempt
+          order: 3
+          size:
+            - 0
+        generation:
+          data_type: int
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: generation
+          order: 2
+          size:
+            - 0
+        generation_id:
+          data_type: serial
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: generation_id
+          order: 1
+          size:
+            - 0
+      indices: []
+      name: generation
+      options: []
+      order: 1
+    match:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - match_id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - white_player_id
+          match_type: ''
+          name: match_fk_white_player_id
+          on_delete: ''
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - player_id
+          reference_table: player
+          type: FOREIGN KEY
+      fields:
+        fen:
+          data_type: text
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: fen
+          order: 3
+          size:
+            - 0
+        is_complete:
+          data_type: boolean
+          default_value: f
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: is_complete
+          order: 2
+          size:
+            - 0
+        json_move_log:
+          data_type: json
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: json_move_log
+          order: 4
+          size:
+            - 0
+        match_id:
+          data_type: uuid
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: match_id
+          order: 1
+          size:
+            - 0
+        number_of_moves:
+          data_type: int
+          default_value: 0
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: number_of_moves
+          order: 5
+          size:
+            - 0
+        white_player_id:
+          data_type: uuid
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: white_player_id
+          order: 6
+          size:
+            - 0
+      indices:
+        - fields:
+            - white_player_id
+          name: match_idx_white_player_id
+          options: []
+          type: NORMAL
+      name: match
+      options: []
+      order: 3
+    match_player:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - match_id
+            - player_id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - match_id
+          match_type: ''
+          name: match_player_fk_match_id
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - match_id
+          reference_table: match
+          type: FOREIGN KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - player_id
+          match_type: ''
+          name: match_player_fk_player_id
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - player_id
+          reference_table: player
+          type: FOREIGN KEY
+      fields:
+        match_id:
+          data_type: uuid
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: match_id
+          order: 1
+          size:
+            - 0
+        player_id:
+          data_type: uuid
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: player_id
+          order: 2
+          size:
+            - 0
+      indices:
+        - fields:
+            - match_id
+          name: match_player_idx_match_id
+          options: []
+          type: NORMAL
+        - fields:
+            - player_id
+          name: match_player_idx_player_id
+          options: []
+          type: NORMAL
+      name: match_player
+      options: []
+      order: 5
+    player:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - player_id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - strand_id
+          match_type: ''
+          name: player_fk_strand_id
+          on_delete: ''
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - strand_id
+          reference_table: strand
+          type: FOREIGN KEY
+      fields:
+        name:
+          data_type: text
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: name
+          order: 2
+          size:
+            - 0
+        player_id:
+          data_type: uuid
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: player_id
+          order: 1
+          size:
+            - 0
+        strand_id:
+          data_type: uuid
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: strand_id
+          order: 3
+          size:
+            - 0
+        wins:
+          data_type: int
+          default_value: 0
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: wins
+          order: 4
+          size:
+            - 0
+      indices:
+        - fields:
+            - strand_id
+          name: player_idx_strand_id
+          options: []
+          type: NORMAL
+      name: player
+      options: []
+      order: 2
+    strand:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - strand_id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - generation_id
+          match_type: ''
+          name: strand_fk_generation_id
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - generation_id
+          reference_table: generation
+          type: FOREIGN KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - parent_1_id
+          match_type: ''
+          name: strand_fk_parent_1_id
+          on_delete: ''
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - strand_id
+          reference_table: strand
+          type: FOREIGN KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - parent_2_id
+          match_type: ''
+          name: strand_fk_parent_2_id
+          on_delete: ''
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - strand_id
+          reference_table: strand
+          type: FOREIGN KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - strand_id
+          match_type: ''
+          name: strand_fk_strand_id
+          on_delete: ''
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - player_id
+          reference_table: player
+          type: FOREIGN KEY
+      fields:
+        generation_id:
+          data_type: int
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: generation_id
+          order: 2
+          size:
+            - 0
+        json_description:
+          data_type: json
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: json_description
+          order: 5
+          size:
+            - 0
+        matches:
+          data_type: int
+          default_value: 0
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: matches
+          order: 6
+          size:
+            - 0
+        matches_won:
+          data_type: int
+          default_value: 0
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: matches_won
+          order: 7
+          size:
+            - 0
+        parent_1_id:
+          data_type: uuid
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: parent_1_id
+          order: 3
+          size:
+            - 0
+        parent_2_id:
+          data_type: uuid
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: parent_2_id
+          order: 4
+          size:
+            - 0
+        strand_id:
+          data_type: uuid
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: strand_id
+          order: 1
+          size:
+            - 0
+      indices:
+        - fields:
+            - generation_id
+          name: strand_idx_generation_id
+          options: []
+          type: NORMAL
+        - fields:
+            - parent_1_id
+          name: strand_idx_parent_1_id
+          options: []
+          type: NORMAL
+        - fields:
+            - parent_2_id
+          name: strand_idx_parent_2_id
+          options: []
+          type: NORMAL
+      name: strand
+      options: []
+      order: 4
+  triggers: {}
+  views: {}
+translator:
+  add_drop_table: 0
+  filename: ~
+  no_comments: 0
+  parser_args:
+    sources:
+      - Generation
+      - Match
+      - MatchPlayer
+      - Player
+      - Strand
+  parser_type: SQL::Translator::Parser::DBIx::Class
+  producer_args: {}
+  producer_type: SQL::Translator::Producer::YAML
+  show_warnings: 0
+  trace: 0
+  version: 0.11021

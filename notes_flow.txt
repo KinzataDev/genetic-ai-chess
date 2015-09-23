@@ -23,8 +23,11 @@ Tables:
 	Strand:
 		strand_id - uuid
 		generation_id - int
+		parent_1_id - uuid
+		parent_2_id - uuid
 		json_gene_description - json
-		has_played - bool
+		matches - int
+		matches_won - int
 
 	Match:
 		match_id - uuid

@@ -14,3 +14,6 @@ requires 'namespace::autoclean';
 requires 'MooseX::ClassAttribute';
 requires 'Params::Validate';
 requires 'Clone';
+requires 'DBIx::Class::Migration';
+requires 'DBIx::Class';
+requires 'Test::PostgreSQL';

@@ -3,8 +3,10 @@ package Chess::Schema;
 use Moose;
 use namespace::autoclean;
 
-extends DBIx::Class::Schema;
+extends 'DBIx::Class::Schema';
 
-__PACKAGE__->meta->make_immutable;
+our $VERSION = 1;
+
+__PACKAGE__->load_namespaces;
 
 1;
