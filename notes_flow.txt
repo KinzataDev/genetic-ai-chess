@@ -14,6 +14,10 @@ GameControllerProcess
 	Creates actual GameController object and kicks off the game
 	When done, records winner in the DB if there was one, along with any relevant info
 
+AttemptSetup
+	Loads the default Strand for a set amount of strands then randomizes them based on the min/max values.
+	Creates a new generation as a new attempt.  Marks the previous generation as complete.
+
 Tables:
 	Generation:
 		generation_id - serial
