@@ -1,6 +1,14 @@
 {
    "sets" : [
       {
+         "class" : "Match",
+         "quantity" : "all"
+      },
+      {
+         "quantity" : "all",
+         "class" : "Generation"
+      },
+      {
          "quantity" : "all",
          "class" : "MatchPlayer"
       },
@@ -9,25 +17,17 @@
          "class" : "Player"
       },
       {
-         "class" : "Generation",
-         "quantity" : "all"
-      },
-      {
-         "class" : "Strand",
-         "quantity" : "all"
-      },
-      {
-         "class" : "Match",
-         "quantity" : "all"
+         "quantity" : "all",
+         "class" : "Strand"
       }
    ],
+   "might_have" : {
+      "fetch" : 0
+   },
    "belongs_to" : {
       "fetch" : 0
    },
    "has_many" : {
-      "fetch" : 0
-   },
-   "might_have" : {
       "fetch" : 0
    }
 }

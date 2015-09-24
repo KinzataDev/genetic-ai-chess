@@ -1,6 +1,6 @@
 -- 
 -- Created by SQL::Translator::Producer::PostgreSQL
--- Created on Mon Sep 21 19:11:55 2015
+-- Created on Thu Sep 24 18:29:47 2015
 -- 
 ;
 --
@@ -12,6 +12,22 @@ CREATE TABLE "generation" (
   "attempt" integer,
   PRIMARY KEY ("generation_id")
 );
+
+;
+--
+-- Table: strand
+--
+CREATE TABLE "strand" (
+  "strand_id" uuid NOT NULL,
+  "generation_id" integer NOT NULL,
+  "parent_1_id" uuid,
+  "parent_2_id" uuid,
+  "json_description" json NOT NULL,
+  "matches" integer DEFAULT 0 NOT NULL,
+  "matches_won" integer DEFAULT 0 NOT NULL,
+  PRIMARY KEY ("strand_id")
+);
+CREATE INDEX "strand_idx_generation_id" on "strand" ("generation_id");
 
 ;
 --
@@ -43,24 +59,6 @@ CREATE INDEX "match_idx_white_player_id" on "match" ("white_player_id");
 
 ;
 --
--- Table: strand
---
-CREATE TABLE "strand" (
-  "strand_id" uuid NOT NULL,
-  "generation_id" integer NOT NULL,
-  "parent_1_id" uuid,
-  "parent_2_id" uuid,
-  "json_description" json NOT NULL,
-  "matches" integer DEFAULT 0 NOT NULL,
-  "matches_won" integer DEFAULT 0 NOT NULL,
-  PRIMARY KEY ("strand_id")
-);
-CREATE INDEX "strand_idx_generation_id" on "strand" ("generation_id");
-CREATE INDEX "strand_idx_parent_1_id" on "strand" ("parent_1_id");
-CREATE INDEX "strand_idx_parent_2_id" on "strand" ("parent_2_id");
-
-;
---
 -- Table: match_player
 --
 CREATE TABLE "match_player" (
@@ -77,27 +75,15 @@ CREATE INDEX "match_player_idx_player_id" on "match_player" ("player_id");
 --
 
 ;
-ALTER TABLE "player" ADD CONSTRAINT "player_fk_strand_id" FOREIGN KEY ("strand_id")
-  REFERENCES "strand" ("strand_id") ON UPDATE CASCADE DEFERRABLE;
-
-;
-ALTER TABLE "match" ADD CONSTRAINT "match_fk_white_player_id" FOREIGN KEY ("white_player_id")
-  REFERENCES "player" ("player_id") ON UPDATE CASCADE DEFERRABLE;
-
-;
 ALTER TABLE "strand" ADD CONSTRAINT "strand_fk_generation_id" FOREIGN KEY ("generation_id")
   REFERENCES "generation" ("generation_id") ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE;
 
 ;
-ALTER TABLE "strand" ADD CONSTRAINT "strand_fk_parent_1_id" FOREIGN KEY ("parent_1_id")
-  REFERENCES "strand" ("strand_id") ON UPDATE CASCADE DEFERRABLE;
+ALTER TABLE "player" ADD CONSTRAINT "player_fk_strand_id" FOREIGN KEY ("strand_id")
+  REFERENCES "strand" ("strand_id") ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE;
 
 ;
-ALTER TABLE "strand" ADD CONSTRAINT "strand_fk_parent_2_id" FOREIGN KEY ("parent_2_id")
-  REFERENCES "strand" ("strand_id") ON UPDATE CASCADE DEFERRABLE;
-
-;
-ALTER TABLE "strand" ADD CONSTRAINT "strand_fk_strand_id" FOREIGN KEY ("strand_id")
+ALTER TABLE "match" ADD CONSTRAINT "match_fk_white_player_id" FOREIGN KEY ("white_player_id")
   REFERENCES "player" ("player_id") ON UPDATE CASCADE DEFERRABLE;
 
 ;

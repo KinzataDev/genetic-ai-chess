@@ -147,7 +147,7 @@ schema:
           type: NORMAL
       name: match
       options: []
-      order: 3
+      order: 4
     match_player:
       constraints:
         - deferrable: 1
@@ -244,7 +244,7 @@ schema:
             - strand_id
           match_type: ''
           name: player_fk_strand_id
-          on_delete: ''
+          on_delete: CASCADE
           on_update: CASCADE
           options: []
           reference_fields:
@@ -300,7 +300,7 @@ schema:
           type: NORMAL
       name: player
       options: []
-      order: 2
+      order: 3
     strand:
       constraints:
         - deferrable: 1
@@ -327,45 +327,6 @@ schema:
           reference_fields:
             - generation_id
           reference_table: generation
-          type: FOREIGN KEY
-        - deferrable: 1
-          expression: ''
-          fields:
-            - parent_1_id
-          match_type: ''
-          name: strand_fk_parent_1_id
-          on_delete: ''
-          on_update: CASCADE
-          options: []
-          reference_fields:
-            - strand_id
-          reference_table: strand
-          type: FOREIGN KEY
-        - deferrable: 1
-          expression: ''
-          fields:
-            - parent_2_id
-          match_type: ''
-          name: strand_fk_parent_2_id
-          on_delete: ''
-          on_update: CASCADE
-          options: []
-          reference_fields:
-            - strand_id
-          reference_table: strand
-          type: FOREIGN KEY
-        - deferrable: 1
-          expression: ''
-          fields:
-            - strand_id
-          match_type: ''
-          name: strand_fk_strand_id
-          on_delete: ''
-          on_update: CASCADE
-          options: []
-          reference_fields:
-            - player_id
-          reference_table: player
           type: FOREIGN KEY
       fields:
         generation_id:
@@ -444,19 +405,9 @@ schema:
           name: strand_idx_generation_id
           options: []
           type: NORMAL
-        - fields:
-            - parent_1_id
-          name: strand_idx_parent_1_id
-          options: []
-          type: NORMAL
-        - fields:
-            - parent_2_id
-          name: strand_idx_parent_2_id
-          options: []
-          type: NORMAL
       name: strand
       options: []
-      order: 4
+      order: 2
   triggers: {}
   views: {}
 translator:

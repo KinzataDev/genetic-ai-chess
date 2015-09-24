@@ -6,6 +6,7 @@ use MooseX::NonMoose;
 use namespace::autoclean;
 
 extends 'Chess::Schema::Result';
+with 'Chess::Role::Result::Strand';
 
 __PACKAGE__->table('strand');
 __PACKAGE__->add_columns(
@@ -31,6 +32,7 @@ __PACKAGE__->add_columns(
 );
 
 __PACKAGE__->set_primary_key(qw/ strand_id /);
+__PACKAGE__->uuid_columns('strand_id');
 
 __PACKAGE__->belongs_to(
 	generation => 'Chess::Schema::Result::Generation',
@@ -38,22 +40,19 @@ __PACKAGE__->belongs_to(
 	{ on_update => 'CASCADE', }
 );
 
-__PACKAGE__->belongs_to(
+__PACKAGE__->might_have(
 	player => 'Chess::Schema::Result::Player',
 	'strand_id',
-	{ on_update => 'CASCADE', }
 );
 
-__PACKAGE__->belongs_to(
+__PACKAGE__->might_have(
 	parent_1 => 'Chess::Schema::Result::Strand',
 	'parent_1_id',
-	{ on_update => 'CASCADE', }
 );
 
-__PACKAGE__->belongs_to(
+__PACKAGE__->might_have(
 	parent_2 => 'Chess::Schema::Result::Strand',
 	'parent_2_id',
-	{ on_update => 'CASCADE', }
 );
 
 __PACKAGE__->has_many(

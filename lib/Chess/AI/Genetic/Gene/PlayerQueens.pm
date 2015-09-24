@@ -15,7 +15,7 @@ use constant {
 
 has '+weight' => (
 	is      => 'rw',
-	isa     => 'Int',
+	isa     => 'Num',
 	lazy    => 1,
 	default => 20,
 );

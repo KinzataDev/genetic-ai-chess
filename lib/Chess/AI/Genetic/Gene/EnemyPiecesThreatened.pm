@@ -9,7 +9,7 @@ extends 'Chess::AI::Genetic::Gene';
 
 has '+weight' => (
 	is => 'ro',
-	isa => 'Int',
+	isa => 'Num',
 	lazy => 1,
 	default => sub {
 		return 1;

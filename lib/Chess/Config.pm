@@ -26,8 +26,6 @@ sub _build__config {
 
 	my $config = Config::General->new( -ConfigFile => __DIR__ . "/../../" . Chess::Config->filename, -ForceArray => "yes" );
 
-	use DDP; p $config;
-
 	return $config->{config};
 }
 

@@ -26,6 +26,7 @@ __PACKAGE__->add_columns(
 );
 
 __PACKAGE__->set_primary_key(qw/ match_id /);
+__PACKAGE__->uuid_columns(qw/ match_id / );
 
 __PACKAGE__->has_many(
 	match_players => 'Chess::Schema::Result::MatchPlayer',

@@ -22,6 +22,7 @@ __PACKAGE__->add_columns(
 );
 
 __PACKAGE__->set_primary_key(qw/ player_id /);
+__PACKAGE__->uuid_columns(qw/player_id/);
 
 __PACKAGE__->belongs_to(
 	strand => 'Chess::Schema::Result::Strand',

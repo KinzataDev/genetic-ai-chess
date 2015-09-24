@@ -6,6 +6,8 @@ use namespace::autoclean;
 
 extends 'Chess::Schema::Result';
 
+with 'Chess::Role::Result::Generation';
+
 __PACKAGE__->table('generation');
 __PACKAGE__->add_columns(
 	generation_id => { data_type => 'serial', },

@@ -6,6 +6,9 @@ use DDP;
 
 use Chess::Config;
 use Module::Load;
+use Chess::Moose;
+
+use JSON qw/encode_json/;
 
 has 'genes' => (
 	is => 'ro',
@@ -41,6 +44,47 @@ has 'gene_definition' => (
 	default => sub {
 		return undef;
 	},
+);
+
+has 'strand_id' => (
+	is		=> 'rw',
+	isa		=> 'Str|Undef',
+	lazy    => 1,
+	default => undef,
+);
+
+has 'parent_1_id' => (
+	is		=> 'rw',
+	isa		=> 'Str|Undef',
+	lazy    => 1,
+	default => undef,
+);
+
+has 'parent_2_id' => (
+	is		=> 'rw',
+	isa		=> 'Str|Undef',
+	lazy    => 1,
+	default => undef,
+);
+
+has 'generation_id' => (
+	is       => 'rw',
+	isa      => 'Int',
+	required => 1,
+);
+
+has 'matches' => (
+	is		=> 'rw',
+	isa		=> 'Int',
+	lazy    => 1,
+	default => 0,
+);
+
+has 'matches_won' => (
+	is		=> 'rw',
+	isa		=> 'Int',
+	lazy    => 1,
+	default => 0,
 );
 
 sub calculate_move_value {
@@ -88,11 +132,41 @@ sub get_gene_hash {
 
 	my $hash = {};
 
-	foreach my $gene ( $self->genes ) {
+	foreach my $gene ( @{$self->genes} ) {
 		$hash->{$gene->id} = $gene->to_hash();
 	}
 
 	return $hash;
+}
+
+sub write_to_db {
+	my $self = shift;
+
+	my $strand;
+	my $schema = Chess::Moose->_schema;
+
+	my $data = {
+		generation_id    => $self->generation_id,
+		parent_1_id      => $self->parent_1_id,
+		parent_2_id      => $self->parent_2_id,
+		json_description => encode_json( $self->get_gene_hash ),
+		matches          => $self->matches,
+		matches_won      => $self->matches_won,
+	};
+
+	if( defined $self->strand_id ) {
+		$strand = $schema->resultset('Strand')->find($self->strand_id);
+	}
+
+	if( defined $strand ) {
+		$strand->save( $data );
+	}
+	else {
+		$strand = Chess::Moose->_schema->resultset('Strand')->new_result( {} )->save( $data );
+		$self->strand_id( $strand->strand_id );
+	}
+
+	return;
 }
 
 sub _build_strand_from_definition {
@@ -141,6 +215,23 @@ sub _load_default_genes {
 	}
 
 	return \@imported_genes;
+}
+
+=head2 _randomize_weights
+
+Takes the current genes iterating over them and randomizing the weight of each.
+This is intended to be used at the start of a new attempt only, not a new generation.
+Basically just calls mutate on each gene.
+
+=cut
+
+sub _randomize_weights {
+	my $self = shift;
+
+	foreach my $gene ( @{$self->genes} ) {
+		$gene->weight($gene->mutate()) if $gene->can_mutate;
+	}
+	return;
 }
 
 

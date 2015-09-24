@@ -17,3 +17,4 @@ requires 'Clone';
 requires 'DBIx::Class::Migration';
 requires 'DBIx::Class';
 requires 'Test::PostgreSQL';
+requires 'DBIx::Class::UUIDColumns';

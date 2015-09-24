@@ -101,7 +101,7 @@ sub to_hash {
 		can_mutate => $self->can_mutate,
 		max_range => $self->max_range,
 		min_weight => $self->min_weight,
-		module_name => __PACKAGE__,
+		module_name => ref $self,
 	};
 }
 
