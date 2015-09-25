@@ -5,4 +5,7 @@ use lib "$Bin/../lib";
 
 use Chess;
 
+use Chess::Utils::Log qw/ $util_log /;
+Chess::Utils::Log->init_logger();
+
 Chess->run;

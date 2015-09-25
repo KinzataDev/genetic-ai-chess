@@ -30,7 +30,7 @@ override 'move' => sub {
 
 	my $best_move;
 	my @best_moves = ();
-	my $best_move_value = -10000;
+	my $best_move_value;
 
 	my $move_list = $my_state->{moves};
 
@@ -44,7 +44,7 @@ override 'move' => sub {
 			$temp_move .= $move->{promote};
 		}
 		$move_hash = $self->calculate_move_value( $board, $temp_move );
-		if ( $move_hash->{value} > $best_move_value ) {
+		if ( !defined $best_move_value || $move_hash->{value} > $best_move_value ) {
 			$best_move_value = $move_hash->{value};
 			$best_move      = $move_hash;
 			@best_moves     = ($move_hash);

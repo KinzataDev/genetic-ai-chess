@@ -52,6 +52,18 @@ has 'board' => (
 	},
 );
 
+#TODO:
+#has 'match' => (
+#	is		=> 'ro',
+#	isa		=> 'Chess::Schema::Result::Player',
+#	lazy    => 1,
+#	default => sub {
+#		my $self = shift;
+#		return
+#	},
+#);
+
+
 Chess::Utils::Log->init_logger();
 
 sub _init {
@@ -60,8 +72,12 @@ sub _init {
 	$util_log->level_debug( message => "Setting up new game", color => $util_log->debug_green, );
 
 	$self->board( Chess::Board->new() );
-	$self->player_white( Chess::Player::AI->new( name => "Player_white" ) );
-	$self->player_black( Chess::Player::AI->new( name => "Player_black" ) );
+	if( !defined $self->player_white ) {
+		$self->player_white( Chess::Player::AI->new( name => "Player_white" ) );
+	}
+	if( !defined $self->player_black ) {
+		$self->player_black( Chess::Player::AI->new( name => "Player_black" ) );
+	}
 
 	$self->board->white_status( $self->board->status );
 
@@ -96,15 +112,16 @@ sub play_game {
 	my $ref = $self->board->rep->dump_pos();
 	$util_log->dump( title => "Final State:", ref => "\n$ref", level => 1, color => $util_log->debug_on_white . $util_log->debug_black );
 
-	# TODO: return winner, and number of turns
 	if( $turns == $self->config->{max_moves} ) {
 		return { winner => undef, turns => $turns };
 	}
 
 	if ( $to_move == WHITE_MOVE ) {
+		$util_log->level_debug( message => "Winner: WHITE - ". $self->player_white->name, level => 1, color => $util_log->debug_green, );
 		return { winner => $self->player_white, turns => $turns };
 	}
 	else {
+		$util_log->level_debug( message => "Winner: BLACK - ". $self->player_black->name, level => 1, color => $util_log->debug_green, );
 		return { winner => $self->player_black, turns => $turns };
 	}
 }
@@ -129,7 +146,7 @@ sub play_turn {
 	my $ret_hash = $self->board->go_move( $move_hash->{move} );
 
 	my $ref = $self->board->rep->dump_pos();
-	$util_log->dump( title => "Final State:", ref => "\n$ref", level => 5, color => $util_log->debug_on_white . $util_log->debug_black );
+	$util_log->dump( title => "Current State:", ref => "\n$ref", level => 5, color => $util_log->debug_on_white . $util_log->debug_black );
 }
 
 1;

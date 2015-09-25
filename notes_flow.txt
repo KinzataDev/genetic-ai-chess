@@ -3,7 +3,7 @@ FLOW:
 Start up service to request games
 GameManager
 	Service queries DB for most recent generation, pulls in 2 strands that haven't played
-	Sends strands off via MQ to be played -> GameController (via MQ backend)
+	Sends strands off via MQ to be played -> GameControllerProcess (via MQ backend)
 
 	Polls every once in a while for all strands to have completed games.
 	Once done, retrieves them based on the selection rules and sends them to be processed.
@@ -13,6 +13,13 @@ GameControllerProcess
 	Builds 2 AI players via the strands.
 	Creates actual GameController object and kicks off the game
 	When done, records winner in the DB if there was one, along with any relevant info
+
+	If given just a generation, find 2 strands, have them play.
+	If given strands, have them play.
+
+	If given players, use the player's strands.
+
+	If not given players, create players for the strands if none can be found.
 
 AttemptSetup
 	Loads the default Strand for a set amount of strands then randomizes them based on the min/max values.

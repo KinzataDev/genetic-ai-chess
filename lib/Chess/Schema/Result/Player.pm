@@ -6,6 +6,7 @@ use MooseX::NonMoose;
 use namespace::autoclean;
 
 extends 'Chess::Schema::Result';
+with 'Chess::Role::Result::Player';
 
 __PACKAGE__->table('player');
 __PACKAGE__->add_columns(
